@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/last_captured_text"
+        app:layout_constraintTop_toBottomOf="@+id/streak_text"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -34,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@+id/current_topic_text" />
 
     <TextView
-        android:id="@+id/last_captured_text"
+        android:id="@+id/streak_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -42,7 +42,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/alice"
-        android:text="Last captured image:"
+        android:text="Streak: 0"
         android:textColor="#1F271B"
         app:layout_constraintBottom_toTopOf="@+id/last_captured_image"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,4 +60,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/topic_match_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:fontFamily="@font/alice"
+        android:shadowColor="#FF0000"
+        android:text="Topic match: 0%"
+        android:textColor="#1F271B"
+        android:textColorHint="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/last_captured_image"
+        app:layout_constraintEnd_toEndOf="@+id/last_captured_image" />
 </androidx.constraintlayout.widget.ConstraintLayout>

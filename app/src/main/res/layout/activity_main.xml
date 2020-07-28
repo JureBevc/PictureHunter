@@ -28,4 +28,15 @@
 
     <include layout="@layout/content_main" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/continue_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:clickable="true"
+        android:src="@android:drawable/ic_menu_send"
+        android:visibility="invisible"
+        app:backgroundTint="@color/design_default_color_primary_dark" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

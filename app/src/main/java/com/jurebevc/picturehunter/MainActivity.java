@@ -3,15 +3,12 @@ package com.jurebevc.picturehunter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,20 +24,16 @@ import com.google.mlkit.vision.objects.ObjectDetector;
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions;
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 public class MainActivity extends Activity {
@@ -49,17 +42,21 @@ public class MainActivity extends Activity {
     private Uri photoURI;
     private List<String> labels = new ArrayList<>();
     private String currentTopic;
+    final float[] topicMatch = {0};
+    int streak = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.last_captured_text).setVisibility(View.INVISIBLE);
+        findViewById(R.id.streak_text).setVisibility(View.INVISIBLE);
+        findViewById(R.id.topic_match_text).setVisibility(View.INVISIBLE);
         loadLabels();
         generateTopic();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         FloatingActionButton refreshTopicButton = (FloatingActionButton) findViewById(R.id.refreshTopicButton);
+        FloatingActionButton continueButton = (FloatingActionButton) findViewById(R.id.continue_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,11 +68,27 @@ public class MainActivity extends Activity {
         refreshTopicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                streak = 0;
+                updateStreakText();
                 generateTopic();
-                Snackbar.make(view, "Refreshed topic", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Your streak has been reset.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generateTopic();
+                streak+=1;
+                updateStreakText();
+                ((ImageView)findViewById(R.id.last_captured_image)).setImageBitmap(null);
+                disableContinue();
+            }
+        });
+    }
+
+    private void updateStreakText() {
+        ((TextView)findViewById(R.id.streak_text)).setText("Streak: " + streak);
     }
 
     private void generateTopic() {
@@ -83,6 +96,21 @@ public class MainActivity extends Activity {
             currentTopic = labels.get((int) (Math.random() * labels.size()));
         } while (currentTopic.equals("???"));
         ((TextView) findViewById(R.id.current_topic)).setText(currentTopic);
+        topicMatch[0] = 0;
+        refreshMatchText();
+    }
+
+    private void refreshMatchText() {
+        Log.w("DETECTED LABEL", "Setting match text " + topicMatch[0]);
+        ((TextView)findViewById(R.id.topic_match_text)).setText("Topic match: " + (int)(topicMatch[0] * 100) + "%");
+    }
+
+    private void enableContinue(){
+        findViewById(R.id.continue_button).setVisibility(View.VISIBLE);
+    }
+
+    private void disableContinue(){
+        findViewById(R.id.continue_button).setVisibility(View.INVISIBLE);
     }
 
     private void loadLabels() {
@@ -118,7 +146,8 @@ public class MainActivity extends Activity {
                 Log.i("BITMAP SIZE", "" + bitmap.getWidth() + " " + bitmap.getHeight());
                 //objectDetector(bitmap);
                 customDetector(bitmap);
-                findViewById(R.id.last_captured_text).setVisibility(View.VISIBLE);
+                findViewById(R.id.streak_text).setVisibility(View.VISIBLE);
+                findViewById(R.id.topic_match_text).setVisibility(View.VISIBLE);
                 ((ImageView)findViewById(R.id.last_captured_image)).setImageBitmap(bitmap);
 
                 //((ImageView) findViewById(R.id.capturedImage)).setImageBitmap(bitmap);
@@ -164,8 +193,15 @@ public class MainActivity extends Activity {
                                 if (labels.size() > label.getIndex())
                                     labelText = labels.get(label.getIndex());
                                 Log.i("DETECTED LABEL", labelText + "(" + label.getIndex() + ") - " + label.getConfidence());
+                                Log.i("DETECTED LABEL", "Comparisson " + (currentTopic.equals(labelText)));
+                                if(currentTopic.equals(labelText) && label.getConfidence() > topicMatch[0])
+                                    topicMatch[0] = label.getConfidence();
+                                Log.i("DETECTED LABEL", "Match value " + topicMatch[0]);
                             }
                         }
+                        refreshMatchText();
+                        if(topicMatch[0] >= 0.4)
+                            enableContinue();
                     }
                 });
     }
