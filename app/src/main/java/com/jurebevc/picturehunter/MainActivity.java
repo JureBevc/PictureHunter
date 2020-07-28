@@ -1,5 +1,6 @@
 package com.jurebevc.picturehunter;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -9,11 +10,15 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.common.model.LocalModel;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.objects.DetectedObject;
@@ -21,6 +26,8 @@ import com.google.mlkit.vision.objects.ObjectDetection;
 import com.google.mlkit.vision.objects.ObjectDetector;
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions;
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,18 +43,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Uri photoURI;
     private List<String> labels = new ArrayList<>();
+    private String currentTopic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        findViewById(R.id.last_captured_text).setVisibility(View.INVISIBLE);
         loadLabels();
+        generateTopic();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton refreshTopicButton = (FloatingActionButton) findViewById(R.id.refreshTopicButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,6 +68,21 @@ public class MainActivity extends AppCompatActivity {
                 //        .setAction("Action", null).show();
             }
         });
+        refreshTopicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generateTopic();
+                Snackbar.make(view, "Refreshed topic", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+    }
+
+    private void generateTopic() {
+        do {
+            currentTopic = labels.get((int) (Math.random() * labels.size()));
+        } while (currentTopic.equals("???"));
+        ((TextView) findViewById(R.id.current_topic)).setText(currentTopic);
     }
 
     private void loadLabels() {
@@ -91,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("BITMAP SIZE", "" + bitmap.getWidth() + " " + bitmap.getHeight());
                 //objectDetector(bitmap);
                 customDetector(bitmap);
+                findViewById(R.id.last_captured_text).setVisibility(View.VISIBLE);
+                ((ImageView)findViewById(R.id.last_captured_image)).setImageBitmap(bitmap);
 
                 //((ImageView) findViewById(R.id.capturedImage)).setImageBitmap(bitmap);
             } catch (IOException e) {
@@ -132,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("DETECTED", "Object labels: " + detectedObject.getLabels().size());
                             for (DetectedObject.Label label : detectedObject.getLabels()) {
                                 String labelText = "";
-                                if(labels.size() > label.getIndex())
+                                if (labels.size() > label.getIndex())
                                     labelText = labels.get(label.getIndex());
                                 Log.i("DETECTED LABEL", labelText + "(" + label.getIndex() + ") - " + label.getConfidence());
                             }
