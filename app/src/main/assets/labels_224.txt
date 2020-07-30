@@ -1,73 +1,73 @@
-background
-tench
-goldfish
-great white shark
-tiger shark
-hammerhead
-electric ray
-stingray
-cock
-hen
-ostrich
-brambling
-goldfinch
-house finch
-junco
-indigo bunting
-robin
-bulbul
-jay
-magpie
-chickadee
-water ouzel
-kite
-bald eagle
-vulture
-great grey owl
-European fire salamander
-common newt
-eft
-spotted salamander
-axolotl
-bullfrog
-tree frog
-tailed frog
-loggerhead
-leatherback turtle
-mud turtle
-terrapin
-box turtle
-banded gecko
-common iguana
-American chameleon
-whiptail
-agama
-frilled lizard
-alligator lizard
-Gila monster
-green lizard
-African chameleon
-Komodo dragon
-African crocodile
-American alligator
-triceratops
-thunder snake
-ringneck snake
-hognose snake
-green snake
-king snake
-garter snake
-water snake
-vine snake
-night snake
-boa constrictor
-rock python
-Indian cobra
-green mamba
-sea snake
-horned viper
-diamondback
-sidewinder
+background	???	???
+tench	fish	animal
+goldfish	fish	animal
+great white shark	fish	animal
+tiger shark	fish	animal
+hammerhead	fish	animal
+electric ray	fish	animal
+stingray	fish	animal
+cock	bird	animal
+hen	bird	animal
+ostrich	bird	animal
+brambling	bird	animal
+goldfinch	bird	animal
+house finch	bird	animal
+junco	bird	animal
+indigo bunting	bird	animal
+robin	bird	animal
+bulbul	bird	animal
+jay	bird	animal
+magpie	bird	animal
+chickadee	bird	animal
+water ouzel	bird	animal
+kite	bird	animal
+bald eagle	bird	animal
+vulture	bird	animal
+great grey owl	bird	animal
+European fire salamander	amphibian	animal
+common newt	amphibian	animal
+eft	amphibian	animal
+spotted salamander	amphibian	animal
+axolotl	amphibian	animal
+bullfrog	amphibian	animal
+tree frog	amphibian	animal
+tailed frog	amphibian	animal
+loggerhead	reptile	animal
+leatherback turtle	reptile	animal
+mud turtle	reptile	animal
+terrapin	reptile	animal
+box turtle	reptile	animal
+banded gecko	reptile	animal
+common iguana	reptile	animal
+American chameleon	reptile	animal
+whiptail	reptile	animal
+agama	reptile	animal
+frilled lizard	reptile	animal
+alligator lizard	reptile	animal
+Gila monster	reptile	animal
+green lizard	reptile	animal
+African chameleon	reptile	animal
+Komodo dragon	reptile	animal
+African crocodile	reptile	animal
+American alligator	reptile	animal
+triceratops	reptile	animal
+thunder snake	snake	animal
+ringneck snake	snake	animal
+hognose snake	snake	animal
+green snake	snake	animal
+king snake	snake	animal
+garter snake	snake	animal
+water snake	snake	animal
+vine snake	snake	animal
+night snake	snake	animal
+boa constrictor	snake	animal
+rock python	snake	animal
+Indian cobra	snake	animal
+green mamba	snake	animal
+sea snake	snake	animal
+horned viper	snake	animal
+diamondback	snake	animal
+sidewinder	snake	animal
 trilobite
 harvestman
 scorpion
@@ -79,27 +79,27 @@ tarantula
 wolf spider
 tick
 centipede
-black grouse
-ptarmigan
-ruffed grouse
-prairie chicken
-peacock
-quail
-partridge
-African grey
-macaw
-sulphur-crested cockatoo
-lorikeet
-coucal
-bee eater
-hornbill
-hummingbird
-jacamar
-toucan
-drake
-red-breasted merganser
-goose
-black swan
+black grouse	bird	animal
+ptarmigan	bird	animal
+ruffed grouse	bird	animal
+prairie chicken	bird	animal
+peacock	bird	animal
+quail	bird	animal
+partridge	bird	animal
+African grey	bird	animal
+macaw	bird	animal
+sulphur-crested cockatoo	bird	animal
+lorikeet	bird	animal
+coucal	bird	animal
+bee eater	bird	animal
+hornbill	bird	animal
+hummingbird	bird	animal
+jacamar	bird	animal
+toucan	bird	animal
+drake	bird	animal
+red-breasted merganser	bird	animal
+goose	bird	animal
+black swan	bird	animal
 tusker
 echidna
 platypus
@@ -997,5 +997,5 @@ stinkhorn
 earthstar
 hen-of-the-woods
 bolete
-ear
+ear	ear	ear
 toilet tissue

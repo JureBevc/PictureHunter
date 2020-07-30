@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="#1F271B"
+        app:backgroundTint="@color/colorButton"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,9 +24,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         android:src="@android:drawable/ic_popup_sync"
-        app:backgroundTint="#1F271B" />
-
-    <include layout="@layout/content_main" />
+        app:backgroundTint="@color/colorButton" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/continue_button"
@@ -35,8 +33,11 @@
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="@dimen/fab_margin"
         android:clickable="true"
-        android:src="@android:drawable/ic_menu_send"
+        android:hapticFeedbackEnabled="true"
+        android:src="@android:drawable/star_big_off"
         android:visibility="invisible"
-        app:backgroundTint="@color/design_default_color_primary_dark" />
+        app:backgroundTint="@color/colorNextButton" />
+
+    <include layout="@layout/content_main" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

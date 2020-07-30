@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -23,6 +24,7 @@ import com.google.mlkit.vision.objects.ObjectDetection;
 import com.google.mlkit.vision.objects.ObjectDetector;
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions;
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions;
+import com.jurebevc.picturehunter.utils.Topic;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,8 +42,9 @@ public class MainActivity extends Activity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Uri photoURI;
-    private List<String> labels = new ArrayList<>();
+    private List<Topic> topics = new ArrayList<>();
     private String currentTopic;
+    private int currentTopicIndex = 0;
     final float[] topicMatch = {0};
     int streak = 0;
 
@@ -49,7 +52,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorBlack));
+        }
         findViewById(R.id.streak_text).setVisibility(View.INVISIBLE);
         findViewById(R.id.topic_match_text).setVisibility(View.INVISIBLE);
         loadLabels();
@@ -79,21 +85,21 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 generateTopic();
-                streak+=1;
+                streak += 1;
                 updateStreakText();
-                ((ImageView)findViewById(R.id.last_captured_image)).setImageBitmap(null);
+                ((ImageView) findViewById(R.id.last_captured_image)).setImageBitmap(null);
                 disableContinue();
             }
         });
     }
 
     private void updateStreakText() {
-        ((TextView)findViewById(R.id.streak_text)).setText("Streak: " + streak);
+        ((TextView) findViewById(R.id.streak_text)).setText("Streak: " + streak);
     }
 
     private void generateTopic() {
         do {
-            currentTopic = labels.get((int) (Math.random() * labels.size()));
+            currentTopic = topics.get((int) (Math.random() * topics.size())).GetTopic(currentTopicIndex);
         } while (currentTopic.equals("???"));
         ((TextView) findViewById(R.id.current_topic)).setText(currentTopic);
         topicMatch[0] = 0;
@@ -102,19 +108,19 @@ public class MainActivity extends Activity {
 
     private void refreshMatchText() {
         Log.w("DETECTED LABEL", "Setting match text " + topicMatch[0]);
-        ((TextView)findViewById(R.id.topic_match_text)).setText("Topic match: " + (int)(topicMatch[0] * 100) + "%");
+        ((TextView) findViewById(R.id.topic_match_text)).setText("Topic match: " + (int) (topicMatch[0] * 100) + "%");
     }
 
-    private void enableContinue(){
+    private void enableContinue() {
         findViewById(R.id.continue_button).setVisibility(View.VISIBLE);
     }
 
-    private void disableContinue(){
+    private void disableContinue() {
         findViewById(R.id.continue_button).setVisibility(View.INVISIBLE);
     }
 
     private void loadLabels() {
-        labels.clear();
+        topics.clear();
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
@@ -122,7 +128,7 @@ public class MainActivity extends Activity {
 
             String mLine;
             while ((mLine = reader.readLine()) != null) {
-                labels.add(mLine.trim());
+                topics.add(new Topic(mLine.trim().split("\t")));
             }
         } catch (IOException e) {
             //log the exception
@@ -148,7 +154,7 @@ public class MainActivity extends Activity {
                 customDetector(bitmap);
                 findViewById(R.id.streak_text).setVisibility(View.VISIBLE);
                 findViewById(R.id.topic_match_text).setVisibility(View.VISIBLE);
-                ((ImageView)findViewById(R.id.last_captured_image)).setImageBitmap(bitmap);
+                ((ImageView) findViewById(R.id.last_captured_image)).setImageBitmap(bitmap);
 
                 //((ImageView) findViewById(R.id.capturedImage)).setImageBitmap(bitmap);
             } catch (IOException e) {
@@ -190,17 +196,17 @@ public class MainActivity extends Activity {
                             Log.i("DETECTED", "Object labels: " + detectedObject.getLabels().size());
                             for (DetectedObject.Label label : detectedObject.getLabels()) {
                                 String labelText = "";
-                                if (labels.size() > label.getIndex())
-                                    labelText = labels.get(label.getIndex());
+                                if (topics.size() > label.getIndex())
+                                    labelText = topics.get(label.getIndex()).GetTopic(currentTopicIndex);
                                 Log.i("DETECTED LABEL", labelText + "(" + label.getIndex() + ") - " + label.getConfidence());
                                 Log.i("DETECTED LABEL", "Comparisson " + (currentTopic.equals(labelText)));
-                                if(currentTopic.equals(labelText) && label.getConfidence() > topicMatch[0])
+                                if (currentTopic.equals(labelText) && label.getConfidence() > topicMatch[0])
                                     topicMatch[0] = label.getConfidence();
                                 Log.i("DETECTED LABEL", "Match value " + topicMatch[0]);
                             }
                         }
                         refreshMatchText();
-                        if(topicMatch[0] >= 0.4)
+                        if (topicMatch[0] >= 0.4)
                             enableContinue();
                     }
                 });
